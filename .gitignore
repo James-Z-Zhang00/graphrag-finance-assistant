@@ -1,3 +1,11 @@
+# Manually Added
+sec-parser/.env
+sec-parser/.venv/
+sec-parser/**/__pycache__/
+sec-parser/**/*.pyc
+sec-parser/**/*.pyo
+sec-parser/**/.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

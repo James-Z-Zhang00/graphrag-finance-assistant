@@ -1,0 +1,30 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies required by some graphrag_agent sub-dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the shared graphrag_agent library first (enables layer caching)
+COPY graphrag_agent/ /app/graphrag_agent/
+COPY setup.py /app/setup.py
+COPY requirements.txt /app/requirements.txt
+
+# Install shared library dependencies
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy build service files
+COPY build-service/ /app/build-service/
+
+# Install build service dependencies (includes -e ../ for graphrag_agent editable install)
+RUN pip install --no-cache-dir -r /app/build-service/requirements.txt
+
+WORKDIR /app/build-service
+
+# Expose build service port
+EXPOSE 8001
+
+CMD ["python", "main.py"]
