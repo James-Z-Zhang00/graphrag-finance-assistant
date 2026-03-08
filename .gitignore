@@ -1,10 +1,52 @@
-# Manually Added
+# MANUALLY ADDED: sec-parser
 sec-parser/.env
 sec-parser/.venv/
 sec-parser/**/__pycache__/
 sec-parser/**/*.pyc
 sec-parser/**/*.pyo
 sec-parser/**/.DS_Store
+
+# MANUALLY ADDED: api-gateway
+api-gateway/.env
+api-gateway/.venv/
+api-gateway/**/__pycache__/
+api-gateway/**/*.pyc
+api-gateway/**/*.pyo
+api-gateway/**/.DS_Store
+
+# MANUALLY ADDED: llm-gateway
+llm-gateway/.env
+llm-gateway/.venv/
+llm-gateway/**/__pycache__/
+llm-gateway/**/*.pyc
+llm-gateway/**/*.pyo
+llm-gateway/**/.DS_Store
+
+# MANUALLY ADDED: search-service
+search-service/.env
+search-service/.venv/
+search-service/**/__pycache__/
+search-service/**/*.pyc
+search-service/**/*.pyo
+search-service/**/.DS_Store
+search-service/**/cache/
+search-service/**/*.faiss
+search-service/**/*.pkl
+
+# MANUALLY ADDED: build-service
+build-service/.env
+build-service/.venv/
+build-service/**/__pycache__/
+build-service/**/*.pyc
+build-service/**/*.pyo
+build-service/**/.DS_Store
+build-service/**/cache/
+build-service/**/*.faiss
+build-service/**/*.pkl
+build-service/files/
+build-service/**/file_registry.json
+
+# MANUALLY ADDED: other
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
