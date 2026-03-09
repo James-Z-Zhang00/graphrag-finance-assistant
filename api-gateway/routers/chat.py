@@ -6,6 +6,7 @@ POST /chat/stream  — streaming search (proxied to search-service)
 POST /clear        — clear session (acknowledged; state lives in search-service)
 """
 
+import os
 import httpx
 import logging
 from fastapi import APIRouter, HTTPException
@@ -14,6 +15,16 @@ from fastapi.responses import StreamingResponse
 from models.schemas import ChatRequest, ChatResponse, ClearRequest, ClearResponse
 from services.kg_service import extract_kg_from_message
 from config.settings import SEARCH_SERVICE_URL
+
+
+def _auth_headers(audience: str) -> dict:
+    """Return a Bearer token header when running on Cloud Run, empty dict locally."""
+    if not os.getenv("K_SERVICE"):
+        return {}
+    from google.auth.transport.requests import Request
+    from google.oauth2 import id_token
+    token = id_token.fetch_id_token(Request(), audience)
+    return {"Authorization": f"Bearer {token}"}
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -32,7 +43,7 @@ async def chat(request: ChatRequest):
     }
     try:
         async with httpx.AsyncClient(timeout=300.0) as client:
-            resp = await client.post(_HYBRID_URL, json=payload)
+            resp = await client.post(_HYBRID_URL, json=payload, headers=_auth_headers(SEARCH_SERVICE_URL))
             resp.raise_for_status()
             data = resp.json()
     except httpx.HTTPStatusError as exc:
@@ -68,7 +79,7 @@ async def chat_stream(request: ChatRequest):
     async def generate():
         try:
             async with httpx.AsyncClient(timeout=300.0) as client:
-                async with client.stream("POST", _STREAM_URL, json=payload) as resp:
+                async with client.stream("POST", _STREAM_URL, json=payload, headers=_auth_headers(SEARCH_SERVICE_URL)) as resp:
                     resp.raise_for_status()
                     async for chunk in resp.aiter_text():
                         yield chunk
@@ -85,7 +96,7 @@ async def clear(request: ClearRequest):
     # If not, just return success — a new session_id will create a fresh agent.
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
-            resp = await client.post(_CLEAR_URL, json={"session_id": request.session_id})
+            resp = await client.post(_CLEAR_URL, json={"session_id": request.session_id}, headers=_auth_headers(SEARCH_SERVICE_URL))
             if resp.status_code == 404:
                 pass  # search-service has no clear endpoint yet — that's ok
             else:

@@ -48,6 +48,7 @@ build-service/**/file_registry.json
 
 # MANUALLY ADDED: other
 .DS_Store
+.claude/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

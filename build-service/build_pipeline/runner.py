@@ -3,8 +3,19 @@ Pipeline runner — executes graph build stages in a background thread.
 Each stage updates the job's stage field so callers can poll progress.
 """
 
+import os
 import multiprocessing as mp
 import traceback
+
+
+def _auth_headers(audience: str) -> dict:
+    """Return a Bearer token header when running on Cloud Run, empty dict locally."""
+    if not os.getenv("K_SERVICE"):
+        return {}
+    from google.auth.transport.requests import Request
+    from google.oauth2 import id_token
+    token = id_token.fetch_id_token(Request(), audience)
+    return {"Authorization": f"Bearer {token}"}
 
 # Must be called before any multiprocessing-spawning code is imported
 try:
@@ -33,6 +44,7 @@ def run_full_build(job_id: str, sec_files_dir: str, sec_parser_url: str):
         resp = requests.post(
             parse_url,
             json={"directory_path": sec_files_dir},
+            headers=_auth_headers(sec_parser_url),
             timeout=600,
         )
         resp.raise_for_status()
