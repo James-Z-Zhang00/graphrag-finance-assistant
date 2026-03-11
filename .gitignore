@@ -1,3 +1,11 @@
+# MANUALLY ADDED: frontend
+frontend/.env
+frontend/.venv/
+frontend/**/__pycache__/
+frontend/**/*.pyc
+frontend/**/*.pyo
+frontend/**/.DS_Store
+
 # MANUALLY ADDED: sec-parser
 sec-parser/.env
 sec-parser/.venv/
