@@ -26,19 +26,31 @@ except RuntimeError:
 from build_pipeline.job_store import job_store
 
 
-def run_full_build(job_id: str, sec_files_dir: str, sec_parser_url: str):
+def run_full_build(job_id: str, sec_files_dir: str, sec_parser_url: str,
+                   gcs_bucket: str = "", gcs_prefix: str = "small/"):
     """
     Full build pipeline:
-      1. Call sec-parser to parse files from sec_files_dir → structured JSON
-      2. Drop all Neo4j indexes
-      3. Build base graph from parsed documents (skips file reading)
-      4. Build entity indexes + community detection
-      5. Build chunk index
+      1. (Optional) Download source files from GCS to a temp dir
+      2. Call sec-parser to parse files → structured JSON
+      3. Drop all Neo4j indexes
+      4. Build base graph from parsed documents (skips file reading)
+      5. Build entity indexes + community detection
+      6. Build chunk index
     """
+    import tempfile
     try:
         import requests
 
-        # Stage 1: parse files via sec-parser
+        # Stage 1 (optional): pull files from GCS into a temp dir
+        if gcs_bucket:
+            job_store.mark_running(job_id, stage="gcs_download")
+            tmp_dir = tempfile.mkdtemp(prefix="gcs-sec-files-")
+            from services.gcs_storage import download_prefix_to_dir
+            n = download_prefix_to_dir(gcs_bucket, gcs_prefix, tmp_dir)
+            print(f"[runner] downloaded {n} file(s) from gs://{gcs_bucket}/{gcs_prefix}")
+            sec_files_dir = tmp_dir
+
+        # Stage 2: parse files via sec-parser
         job_store.mark_running(job_id, stage="sec_parse")
         parse_url = sec_parser_url.rstrip("/") + "/api/sec/parse"
         resp = requests.post(

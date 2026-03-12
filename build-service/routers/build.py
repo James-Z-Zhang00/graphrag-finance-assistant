@@ -14,7 +14,7 @@ from fastapi import APIRouter, HTTPException
 from models import TriggerResponse, JobResponse
 from build_pipeline.job_store import job_store
 from build_pipeline.runner import run_full_build, run_incremental_build
-from config.settings import FILES_DIR, FILE_REGISTRY_PATH, SEC_PARSER_URL, SEC_FILES_DIR
+from config.settings import FILES_DIR, FILE_REGISTRY_PATH, SEC_PARSER_URL, SEC_FILES_DIR, GCS_BUCKET_NAME, GCS_FILES_PREFIX
 
 router = APIRouter(prefix="/build")
 
@@ -32,7 +32,7 @@ async def trigger_full_build():
 
     job = job_store.create("full")
     loop = asyncio.get_event_loop()
-    loop.run_in_executor(_executor, run_full_build, job.job_id, SEC_FILES_DIR, SEC_PARSER_URL)
+    loop.run_in_executor(_executor, run_full_build, job.job_id, SEC_FILES_DIR, SEC_PARSER_URL, GCS_BUCKET_NAME, GCS_FILES_PREFIX)
     return TriggerResponse(job_id=job.job_id, message="Full build started")
 
 

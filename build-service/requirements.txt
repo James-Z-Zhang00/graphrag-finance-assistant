@@ -29,6 +29,7 @@ tiktoken
 
 # GCP auth (service-to-service on Cloud Run)
 google-auth>=2.0.0
+google-cloud-storage>=2.0.0
 requests>=2.32.0
 
 # Build pipeline utilities
