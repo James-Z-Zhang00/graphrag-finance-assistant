@@ -32,12 +32,12 @@ LOG_LEVEL = os.getenv("LLM_GATEWAY_LOG_LEVEL", "info")
 
 # Clients (e.g. graphrag_agent) must send this key as Bearer token.
 # Set to empty string to disable auth (dev only).
-GATEWAY_API_KEY = os.getenv("GATEWAY_API_KEY", "")
+GATEWAY_API_KEY = os.getenv("GATEWAY_API_KEY", "").strip()
 
 # ===== Upstream Provider =====
 
 UPSTREAM_BASE_URL = os.getenv("UPSTREAM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-UPSTREAM_API_KEY = os.getenv("UPSTREAM_API_KEY", "")
+UPSTREAM_API_KEY = os.getenv("UPSTREAM_API_KEY", "").strip()
 
 # ===== Request Config =====
 
