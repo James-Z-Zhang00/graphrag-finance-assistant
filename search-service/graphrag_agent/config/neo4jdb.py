@@ -89,9 +89,12 @@ class DBConnectionManager:
         self.close()
 
 
-db_manager = DBConnectionManager()
+_db_manager: DBConnectionManager | None = None
 
 
 def get_db_manager() -> DBConnectionManager:
-    """Return the global database connection manager instance."""
-    return db_manager
+    """Return the global database connection manager instance (lazy init)."""
+    global _db_manager
+    if _db_manager is None:
+        _db_manager = DBConnectionManager()
+    return _db_manager
