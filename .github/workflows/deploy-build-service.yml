@@ -60,7 +60,7 @@ jobs:
             --min-instances=0 \
             --max-instances=5 \
             --port=8004 \
-            --startup-cpu-boost \
+            --cpu-boost \
             --timeout=300 \
             --set-env-vars="BUILD_SERVICE_PORT=8004,BUILD_SERVICE_RELOAD=false,BUILD_SERVICE_LOG_LEVEL=info" \
             --quiet
