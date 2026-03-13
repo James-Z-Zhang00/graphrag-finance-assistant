@@ -1,6 +1,7 @@
 name: Deploy api-gateway to Cloud Run
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:

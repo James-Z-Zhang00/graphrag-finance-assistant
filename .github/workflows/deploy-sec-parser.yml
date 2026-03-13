@@ -1,6 +1,7 @@
 name: Deploy sec-parser to Cloud Run
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:

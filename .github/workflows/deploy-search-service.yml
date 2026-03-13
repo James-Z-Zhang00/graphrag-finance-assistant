@@ -1,6 +1,7 @@
 name: Deploy search-service to Cloud Run
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
