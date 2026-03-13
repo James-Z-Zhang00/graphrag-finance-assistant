@@ -60,5 +60,5 @@ jobs:
             --min-instances=0 \
             --max-instances=5 \
             --port=8000 \
-            --set-env-vars="GATEWAY_PORT=8000,GATEWAY_RELOAD=false,GATEWAY_LOG_LEVEL=info" \
+            --update-env-vars="GATEWAY_PORT=8000,GATEWAY_RELOAD=false,GATEWAY_LOG_LEVEL=info" \
             --quiet

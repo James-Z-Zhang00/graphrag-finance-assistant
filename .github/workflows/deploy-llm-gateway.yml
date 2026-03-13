@@ -60,5 +60,5 @@ jobs:
             --min-instances=0 \
             --max-instances=5 \
             --port=8002 \
-            --set-env-vars="LLM_GATEWAY_PORT=8002,LLM_GATEWAY_RELOAD=false,LLM_GATEWAY_LOG_LEVEL=info" \
+            --update-env-vars="LLM_GATEWAY_PORT=8002,LLM_GATEWAY_RELOAD=false,LLM_GATEWAY_LOG_LEVEL=info" \
             --quiet

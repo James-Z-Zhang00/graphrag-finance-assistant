@@ -60,5 +60,5 @@ jobs:
             --min-instances=0 \
             --max-instances=5 \
             --port=8001 \
-            --set-env-vars="SEC_PARSER_PORT=8001,SEC_PARSER_RELOAD=false,SEC_PARSER_LOG_LEVEL=info" \
+            --update-env-vars="SEC_PARSER_PORT=8001,SEC_PARSER_RELOAD=false,SEC_PARSER_LOG_LEVEL=info" \
             --quiet
