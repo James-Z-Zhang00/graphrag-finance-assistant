@@ -218,8 +218,8 @@ NEO4J_CONFIG = {
 
 # ===== LLM & Embedding Model Configuration =====
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "").strip()
 OPENAI_EMBEDDINGS_MODEL = os.getenv("OPENAI_EMBEDDINGS_MODEL") or None
 OPENAI_LLM_MODEL = os.getenv("OPENAI_LLM_MODEL") or None
 LLM_TEMPERATURE = _get_env_float("TEMPERATURE", None)

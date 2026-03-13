@@ -20,5 +20,5 @@ async def verify_api_key(
         # Auth disabled — dev mode
         return
 
-    if credentials is None or credentials.credentials != GATEWAY_API_KEY:
+    if credentials is None or credentials.credentials.strip() != GATEWAY_API_KEY:
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
