@@ -6,6 +6,7 @@ Each stage updates the job's stage field so callers can poll progress.
 import os
 import multiprocessing as mp
 import traceback
+from pathlib import Path
 
 
 def _auth_headers(audience: str) -> dict:
@@ -50,15 +51,28 @@ def run_full_build(job_id: str, sec_files_dir: str, sec_parser_url: str,
             print(f"[runner] downloaded {n} file(s) from gs://{gcs_bucket}/{gcs_prefix}")
             sec_files_dir = tmp_dir
 
-        # Stage 2: parse files via sec-parser
+        # Stage 2: upload files to sec-parser and get back parsed documents
         job_store.mark_running(job_id, stage="sec_parse")
         parse_url = sec_parser_url.rstrip("/") + "/api/sec/parse"
-        resp = requests.post(
-            parse_url,
-            json={"directory_path": sec_files_dir},
-            headers=_auth_headers(sec_parser_url),
-            timeout=600,
-        )
+        file_paths = [
+            p for p in Path(sec_files_dir).rglob("*") if p.is_file()
+        ]
+        upload_files = []
+        open_handles = []
+        for p in file_paths:
+            fh = open(p, "rb")
+            open_handles.append(fh)
+            upload_files.append(("files", (p.name, fh, "application/octet-stream")))
+        try:
+            resp = requests.post(
+                parse_url,
+                files=upload_files,
+                headers=_auth_headers(sec_parser_url),
+                timeout=600,
+            )
+        finally:
+            for fh in open_handles:
+                fh.close()
         resp.raise_for_status()
         documents = resp.json()["documents"]
         print(f"[runner] sec-parser returned {len(documents)} document(s)")
